@@ -3,14 +3,17 @@ import type { HistoryEntry } from './types';
 import 'roamjs-components/types';
 
 export const addHistoryWatcher = () => {
-  window.removeEventListener('popstate', window.keepHistory);
+  if (window.keepHistory) {
+    window.removeEventListener('popstate', window.keepHistory);
+  }
 
   if (!window.historyList) {
     window.historyList = [];
   }
 
   window.keepHistory = () => {
-    const str = window.roamAlphaAPI.q(`[
+    const str = window.roamAlphaAPI.q(
+      `[
       :find ?str .
       :in $ ?uid
       :where
@@ -19,7 +22,9 @@ export const addHistoryWatcher = () => {
           [?blk :node/title ?str]
           [?blk :block/string ?str]
         )
-    ]`, location.hash.split("/").at(-1)) as unknown as string | null;
+    ]`,
+      location.hash.split('/').at(-1),
+    ) as unknown as string | null;
 
     if (str)
       window.historyList.push({
@@ -42,15 +47,12 @@ export const searchHistory = () => {
       });
     });
   }
-  return false;
 };
 
 export const historyBack = () => {
-  history.go(-1);
-  return false;
+  history.back();
 };
 
 export const historyForward = () => {
-  history.go(1);
-  return false;
+  history.forward();
 };

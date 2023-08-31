@@ -174,7 +174,7 @@ export const createHints = async (
     elemHintMap.push([hints[i], elem]);
 
     const rect = elem.getBoundingClientRect();
-    // if just some part of it is visible still show a hint lower
+    // If just some part of it is visible still show a hint lower
     hint.style.left = (rect.x >= 0 ? rect.x : 0) + 'px';
     hint.style.top = (rect.y >= 0 ? rect.y : 0) + 'px';
     const z = getZIndex(hint);

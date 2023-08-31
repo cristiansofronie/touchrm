@@ -1,4 +1,4 @@
-import { CallbackFunction } from 'mousetrap-ts';
+import { Block } from './types';
 
 export const scrollIntoViewIfNeeded = function (
   elem: HTMLElement,
@@ -51,34 +51,6 @@ export const scrollIntoViewIfNeeded = function (
   if ((overTop || overBottom || overLeft || overRight) && !centerIfNeeded) {
     elem.scrollIntoView(alignWithTop);
   }
-};
-
-export const normalBind = (keys: string, callback: CallbackFunction) => {
-  const _bindKey = (keys: string, callback: CallbackFunction) => {
-    window.Mousetrap.bind(
-      keys,
-      (event?: KeyboardEvent, combo?: string) => {
-        if (!document.activeElement) return;
-        const tagName = document.activeElement.tagName;
-        if (
-          tagName === 'TEXTAREA' ||
-          tagName === 'INPUT' ||
-          document.activeElement.matches('[contenteditable]')
-        )
-          return;
-
-        callback(event, combo);
-        return false;
-      },
-      'keydown',
-    );
-  };
-
-  _bindKey(keys, callback);
-};
-
-export const globalBind = (keys: string, callback: CallbackFunction) => {
-  window.Mousetrap.bind(keys, callback, 'keydown');
 };
 
 interface SearchEntry {
@@ -361,4 +333,26 @@ export const blkStr = (uid: string) => {
   ]`,
     uid,
   ) as unknown as string | null;
+};
+
+export const sleep = (time: number) =>
+  new Promise<void>(resolve => setTimeout(resolve, time));
+
+export const createBlocks = (blocks: Block[], uid: string) => {
+  blocks.forEach((blk: Block) => {
+    const newUID = window.roamAlphaAPI.util.generateUID();
+    window.roamAlphaAPI.createBlock({
+      location: {
+        'parent-uid': uid,
+        order: 'last',
+      },
+      block: {
+        uid: newUID,
+        string: blk.string,
+      },
+    });
+    if (blk.blocks) {
+      createBlocks(blk.blocks, newUID);
+    }
+  });
 };

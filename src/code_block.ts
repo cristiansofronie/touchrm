@@ -8,7 +8,6 @@ export const copyCodeBlock = () => {
         .previousElementSibling.querySelector('.cm-content').textContent,
     );
   });
-  return false;
 };
 
 export const enterCodeMirror = () => {
@@ -35,5 +34,4 @@ export const enterCodeMirror = () => {
     },
     { autoAction: true },
   );
-  return false;
 };

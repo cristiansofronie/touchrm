@@ -1,5 +1,7 @@
 export const quickSearchWithClip = async () => {
-  const input = document.querySelector('#find-or-create-input') as HTMLInputElement;
+  const input = document.querySelector(
+    '#find-or-create-input',
+  ) as HTMLInputElement;
   const clip = await navigator.clipboard.readText();
 
   input.focus();

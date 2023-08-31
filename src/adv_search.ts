@@ -1,18 +1,9 @@
-export const openInViewTab = () => {
-  const item = document.querySelector('.bp3-active') as HTMLElement ||
-    document.querySelector('.bp3-menu-item:not(:has(.rm-new-item))') as HTMLElement;
-  let uid = (item.querySelector('[data-uid]') as HTMLElement | null)?.dataset.uid;
-
-  if (!uid) {
-    uid = window.roamAlphaAPI.q(`[
-      :find ?uid .
-      :in $ ?title
-      :where
-        [?page :node/title ?title]
-        [?page :block/uid ?uid]
-    ]`, item.textContent) as unknown as string;
+export const setupAdvSearch = () => {
+  if (!window.advSearchBC) {
+    window.advSearchBC = new BroadcastChannel('reload_adv_search');
   }
-  window.browserSyncBC.postMessage({loc: 'main', UID: uid});
 
-  return false;
+  if (!window.advSearchBC) {
+    window.advSearchBC = new BroadcastChannel('adv_search');
+  }
 };

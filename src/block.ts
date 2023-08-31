@@ -94,7 +94,6 @@ export const expandBlock = () => {
       });
     },
   );
-  return false;
 };
 
 export const newNoteUnderTag = () => {
@@ -136,13 +135,13 @@ export const newNoteUnderTag = () => {
       });
     },
   );
-  return false;
 };
 
 export const deleteCurrentBlock = () => {
   const activeElem = document.activeElement;
   window.roamAlphaAPI.deleteBlock({ block: { uid: activeElem.id.slice(-9) } });
-  const blk = activeElem.closest('.roam-block-container')
+  const blk = activeElem
+    .closest('.roam-block-container')
     .previousElementSibling.querySelector('.rm-block__input');
 
   window.roamAlphaAPI.ui.setBlockFocusAndSelection({
@@ -151,7 +150,6 @@ export const deleteCurrentBlock = () => {
       'block-uid': blk.id.slice(-9),
     },
   });
-  return false;
 };
 
 export const expandElem = (elem: HTMLElement) => {
@@ -163,10 +161,10 @@ export const expandElem = (elem: HTMLElement) => {
         observer.disconnect();
         resolve();
       }).observe(document.body, { childList: true });
-      mutationsList.forEach((mutation) => {
-        const elem = [...(mutation.target as HTMLElement).querySelectorAll('a')].filter((e) =>
-          e.textContent.match(/Expand all/)
-        )[0];
+      mutationsList.forEach(mutation => {
+        const elem = [
+          ...(mutation.target as HTMLElement).querySelectorAll('a'),
+        ].filter(e => e.textContent.match(/Expand all/))[0];
         if (elem) {
           elem.click();
           clicked = true;
@@ -178,30 +176,34 @@ export const expandElem = (elem: HTMLElement) => {
 };
 
 export const expandArticle = async () => {
-  const title = document.querySelector('.roam-article .rm-title-display') as HTMLElement | null;
+  const title = document.querySelector(
+    '.roam-article .rm-title-display',
+  ) as HTMLElement | null;
   if (
     title &&
     [
       ...document.querySelectorAll(
-        '.roam-article > div > div:nth-child(2) .rm-caret-closed'
+        '.roam-article > div > div:nth-child(2) .rm-caret-closed',
       ),
     ].filter(
-      (e) =>
+      e =>
         [...e.getElementsByClassName('rm-caret-closed')].filter(
-          (e) => !e.closest('.rm-embed-container, .rm-block-ref')
-        ).length !== 0
+          e => !e.closest('.rm-embed-container, .rm-block-ref'),
+        ).length !== 0,
     )
   ) {
     await expandElem(title);
   } else {
-    const elems = ([...document.querySelectorAll('.rm-level-1')] as HTMLElement[])
+    const elems = (
+      [...document.querySelectorAll('.rm-level-1')] as HTMLElement[]
+    )
       .filter(
-        (e) =>
+        e =>
           [...e.getElementsByClassName('rm-caret-closed')].filter(
-            (e) => !e.closest('.rm-embed-container, .rm-block-ref')
-          ).length !== 0
+            e => !e.closest('.rm-embed-container, .rm-block-ref'),
+          ).length !== 0,
       )
-      .map((e) => e.querySelector('.rm-bullet')) as HTMLElement[];
+      .map(e => e.querySelector('.rm-bullet')) as HTMLElement[];
 
     for (const e of elems) {
       await expandElem(e);
@@ -212,12 +214,12 @@ export const expandArticle = async () => {
 export const expandReferences = async () => {
   const elems = [...document.querySelectorAll('.rm-reference-item')]
     .filter(
-      (e) =>
+      e =>
         [...e.getElementsByClassName('rm-caret-closed')].filter(
-          (e) => !e.closest('.rm-embed-container, .rm-block-ref')
-        ).length !== 0
+          e => !e.closest('.rm-embed-container, .rm-block-ref'),
+        ).length !== 0,
     )
-    .map((e) => e.querySelector('.rm-bullet')) as HTMLElement[];
+    .map(e => e.querySelector('.rm-bullet')) as HTMLElement[];
 
   for (const e of elems) {
     await expandElem(e);
@@ -234,7 +236,48 @@ export const expandAll = () => {
     .bp3-portal {
       display: none !important;
     }
-  `
+  `,
   );
-  return false;
+};
+
+export const newNoteUnderTagFromTextarea = async () => {
+  const textArea = document.activeElement;
+  if (textArea.tagName !== 'TEXTAREA') return;
+
+  const txt = (textArea as HTMLTextAreaElement).value
+    .match(/\[\[[^\[\]]*\]\]/g)
+    .at(-1);
+  if (!txt) return;
+
+  const parentUid = window.roamAlphaAPI.util.generateUID();
+  const childUid = window.roamAlphaAPI.util.generateUID();
+
+  await window.roamAlphaAPI.data.block.create({
+    location: {
+      'parent-uid': location.hash.split('/').at(-1),
+      order: 'last',
+    },
+    block: {
+      string: txt,
+      uid: parentUid,
+    },
+  });
+
+  await window.roamAlphaAPI.data.block.create({
+    location: {
+      'parent-uid': parentUid,
+      order: 'last',
+    },
+    block: {
+      string: '',
+      uid: childUid,
+    },
+  });
+
+  await window.roamAlphaAPI.ui.setBlockFocusAndSelection({
+    location: {
+      'window-id': 'main-window',
+      'block-uid': childUid,
+    },
+  });
 };

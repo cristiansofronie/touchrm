@@ -56,9 +56,7 @@ const focusSecondToLastHighGroup = async () => {
 
 const handleSearchInRoamTitles = (event: MessageEvent) => {
   const searchInRoamTitles = (str: string) => {
-    return titleMatchRegEx(
-      '(?i)' + str.split(' ').join('.*'),
-    );
+    return titleMatchRegEx('(?i)' + str.split(' ').join('.*'));
   };
 
   const results = searchInRoamTitles(event.data.str).map(e => {

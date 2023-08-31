@@ -4,7 +4,6 @@ export const closeAllSidePanes = () => {
   (
     document.querySelectorAll('.bp3-icon-cross') as NodeListOf<HTMLElement>
   ).forEach(e => e.click());
-  return false;
 };
 
 export const closeSidePaneWithHints = () => {
@@ -20,7 +19,6 @@ export const closeSidePaneWithHints = () => {
     },
     { multiHits: true },
   );
-  return false;
 };
 
 export const openWinFromPane = () => {
@@ -38,12 +36,10 @@ export const openWinFromPane = () => {
 
     window.roamAlphaAPI.ui.mainWindow.openPage({ page: { uid } });
   });
-  return false;
 };
 
 export const closeFirstPane = () => {
   (document.querySelector('.bp3-icon-cross') as HTMLElement | null)?.click();
-  return false;
 };
 
 export const openWinFromFirstPane = () => {
@@ -55,5 +51,4 @@ export const openWinFromFirstPane = () => {
   const uid = win['window-id'].slice(-9);
 
   window.roamAlphaAPI.ui.mainWindow.openPage({ page: { uid } });
-  return false;
 };
