@@ -161,16 +161,6 @@ export const handleMessage = async (e: MessageEvent) => {
           UID: pages[0][1],
           justHistory,
         });
-
-        pages
-          .slice(1, 10)
-          .reverse()
-          .forEach(page => {
-            window.browserSyncBC.postMessage({
-              loc: 'sidebar',
-              UID: page[1],
-            });
-          });
       }
     };
 
