@@ -20,3 +20,21 @@ export const reloadExtension = () => {
   );
   return false;
 };
+
+export const clickExtensionReloadButton = () => {
+  createHints(
+    () =>
+      [
+        ...document.querySelectorAll(
+          ':where(.rm-code-warning, .rm-roam-css) button',
+        ),
+      ] as HTMLElement[],
+    element => {
+      return new Promise(resolve => {
+        element.click();
+        resolve();
+      });
+    },
+    { autoAction: true },
+  );
+};

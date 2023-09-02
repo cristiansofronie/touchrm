@@ -41,7 +41,7 @@ import {
 } from './focus_block';
 import { callPrevHints } from './hints';
 import { quickSearchWithClip } from './search';
-import { reloadExtension } from './extension';
+import { reloadExtension, clickExtensionReloadButton } from './extension';
 import { openRefInViewTab } from './view_tab';
 import { copyTitle, focusTitle } from './title';
 import { browserSearch } from './browser_extension';
@@ -94,6 +94,8 @@ export const setupMappings = () => {
 };
 
 export const addMappings = () => {
+  normalBind('g r', clickExtensionReloadButton);
+
   globalBind('alt+l', reloadAdvSearch);
 
   globalBind('alt+shift+p', focusPrevBlkStart);
