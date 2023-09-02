@@ -16,7 +16,10 @@ export const handleMessage = async (e: MessageEvent) => {
   } else if (res.actionType === 'pasteDailyNotes') {
     window.roamPasteBC.postMessage(res.data);
   } else if (res.actionType === 'roamAdvancedSearch') {
-    window.advSearchBC.postMessage(res.query);
+    window.advSearchBC.postMessage({
+      actionType: 'doAdvSearch',
+      query: res.query,
+    });
   } else if (res.actionType === 'queryRoam') {
     const result = window.roamAlphaAPI.q(res.query);
     window.ws.send(

@@ -1,7 +1,10 @@
 export const browserSearch = () => {
   const sele = document.getSelection().toString();
 
-  window.advSearchBC.postMessage(sele);
+  window.advSearchBC.postMessage({
+    actionType: 'doAdvSearch',
+    query: sele,
+  });
 
   try {
     navigator.clipboard.writeText(sele);

@@ -47,6 +47,11 @@ export type SrcBlk = {
   time: number;
 };
 
+export interface AdvSearchMessageEvent extends MessageEvent {
+  actionType: string;
+  query: string;
+};
+
 // Many things are added to the window so that on reload they would be replaced
 declare global {
   interface Window {
@@ -60,6 +65,7 @@ declare global {
     processPasteQueueTimeout: number;
     dailyPageManagementInterval: number;
     isDailyBusy: boolean;
+    isAdvSearchTab: boolean;
     isDailyNotesTab: boolean;
     focusIframe(): void;
     Mousetrap: Mousetrap;
@@ -70,6 +76,7 @@ declare global {
     sessionTabBC: BroadcastChannel;
     roamPasteBC: BroadcastChannel;
     advSearchBC: BroadcastChannel;
+    advSearchBCReceiver: BroadcastChannel;
     keepHistory(): void;
     historyList: HistoryEntry[];
     messageListener(event: MessageEvent): void;

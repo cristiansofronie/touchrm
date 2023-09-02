@@ -47,6 +47,7 @@ import { copyTitle, focusTitle } from './title';
 import { browserSearch } from './browser_extension';
 import { copyCodeBlock, enterCodeMirror } from './code_block';
 import { newTimeBlock, nestBlocksUnderPreviousTime } from './daily';
+import { reloadAdvSearch } from './adv_search';
 
 const normalBind = (keys: string, callback: CustomCallbackFunction) => {
   const _bindKey = (keys: string, callback: CustomCallbackFunction) => {
@@ -93,6 +94,8 @@ export const setupMappings = () => {
 };
 
 export const addMappings = () => {
+  globalBind('alt+l', reloadAdvSearch);
+
   globalBind('alt+shift+p', focusPrevBlkStart);
   globalBind('alt+p', focusPrevBlk);
 
