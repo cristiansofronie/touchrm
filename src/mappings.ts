@@ -44,7 +44,7 @@ import { quickSearchWithClip } from './search';
 import { reloadExtension, clickExtensionReloadButton } from './extension';
 import { openRefInViewTab } from './view_tab';
 import { copyTitle, focusTitle } from './title';
-import { browserSearch } from './browser_extension';
+import { browserSearch, openHrefInTheSearchWin } from './browser_extension';
 import { copyCodeBlock, enterCodeMirror } from './code_block';
 import { newTimeBlock, nestBlocksUnderPreviousTime } from './daily';
 import { reloadAdvSearch } from './adv_search';
@@ -94,6 +94,8 @@ export const setupMappings = () => {
 };
 
 export const addMappings = () => {
+  normalBind('g o', openHrefInTheSearchWin);
+
   normalBind('g r', clickExtensionReloadButton);
 
   globalBind('alt+l', reloadAdvSearch);
