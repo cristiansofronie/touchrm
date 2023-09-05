@@ -58,3 +58,37 @@ export const sidePageUp = () => {
 export const scrollSideToTop = () => {
   document.querySelector('#roam-right-sidebar-content').scrollTop = 0;
 };
+
+const TOP_MARGIN: number = Math.round(
+  document.querySelector('.rm-topbar').getBoundingClientRect().height,
+);
+
+const query = '.rm-page__title';
+const getBlks = () => {
+  return ([...document.querySelectorAll(query)] as HTMLElement[]).sort(
+    (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
+  );
+};
+
+const elemUp = (elems: HTMLElement[], margin: number) => {
+  const i =
+    elems.findLastIndex(
+      e => Math.round(e.getBoundingClientRect().top) < margin,
+    ) + 1;
+  elems[i - 1 > 0 ? i - 1 : 0].scrollIntoView(true);
+};
+
+const elemDown = (elems: HTMLElement[], margin: number) => {
+  const i =
+    elems.findIndex(e => Math.round(e.getBoundingClientRect().top) > margin) -
+    1;
+  elems[i + 1 < elems.length ? i + 1 : elems.length - 1]?.scrollIntoView(true);
+};
+
+export const blockUp = () => {
+  elemUp(getBlks(), TOP_MARGIN);
+};
+
+export const blockDown = () => {
+  elemDown(getBlks(), TOP_MARGIN);
+};

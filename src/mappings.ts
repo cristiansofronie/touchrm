@@ -12,6 +12,8 @@ import {
   scrollSideToTop,
   sidePageDown,
   sidePageUp,
+  blockDown,
+  blockUp,
 } from './scrolling';
 import { historyForward, historyBack, searchHistory } from './history';
 import {
@@ -118,6 +120,9 @@ export const addMappings = () => {
   normalBind('u', pageUp);
   normalBind('j', scrollDown);
   normalBind('k', scrollUp);
+  normalBind('shift+f4', blockUp);
+  normalBind('f4', blockDown);
+
 
   globalBind('alt+j', scrollDown);
   globalBind('alt+k', scrollUp);
