@@ -71,8 +71,10 @@ const handleSearchInRoamTitles = (event: MessageEvent) => {
         ),
       ].at(-1);
       const uid = blk.id.slice(-9);
-      const str = blkStr(uid);
-      if (!str) return;
+      let str = blkStr(uid);
+      if (!str) {
+        str = '';
+      }
       let newStr;
       if (str.trim()) {
         newStr = str + '\n[[' + e.str + ']]';
