@@ -20,7 +20,7 @@ export const addHistoryWatcher = () => {
       window.historyList = window.historyList.filter(e => e.hash !== location.hash);
       window.historyList.push({
         hash: location.hash,
-        str: str.slice(0, 100) + location.hash,
+        str: str.slice(0, 100),
       });
     });
   };
