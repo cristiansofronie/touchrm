@@ -12,25 +12,17 @@ export const addHistoryWatcher = () => {
   }
 
   window.keepHistory = () => {
-    const str = window.roamAlphaAPI.q(
-      `[
-      :find ?str .
-      :in $ ?uid
-      :where
-        [?blk :block/uid ?uid]
-        (or
-          [?blk :node/title ?str]
-          [?blk :block/string ?str]
-        )
-    ]`,
-      location.hash.split('/').at(-1),
-    ) as unknown as string | null;
+    setTimeout(() => {
+      const str = document
+        .querySelector('.roam-article .rm-title-display, .rm-block__input')
+        .textContent;
 
-    if (str)
+      window.historyList = window.historyList.filter(e => e.hash !== location.hash);
       window.historyList.push({
         hash: location.hash,
-        str: str.slice(0, 100),
+        str: str.slice(0, 100) + location.hash,
       });
+    });
   };
 
   window.addEventListener('popstate', window.keepHistory);
