@@ -10,6 +10,7 @@ import {
   scrollDown,
   scrollUp,
   scrollSideToTop,
+  scrollSideToBottom,
   sidePageDown,
   sidePageUp,
   blockDown,
@@ -127,9 +128,10 @@ export const addMappings = () => {
   globalBind('alt+j', scrollDown);
   globalBind('alt+k', scrollUp);
 
-  normalBind('{', scrollSideToTop);
-  normalBind('N', sidePageDown);
-  normalBind('P', sidePageUp);
+  normalBind('shift+[', scrollSideToTop);
+  normalBind('shift+]', scrollSideToBottom);
+  normalBind('shift+n', sidePageDown);
+  normalBind('shift+p', sidePageUp);
 
   normalBind('g h', searchHistory);
   normalBind('shift+b', historyBack);

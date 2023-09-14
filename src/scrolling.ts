@@ -56,7 +56,12 @@ export const sidePageUp = () => {
 };
 
 export const scrollSideToTop = () => {
-  document.querySelector('#roam-right-sidebar-content').scrollTop = 0;
+  document.getElementById('roam-right-sidebar-content').scrollTop = 0;
+};
+
+export const scrollSideToBottom = () => {
+  const elem = document.getElementById('roam-right-sidebar-content');
+  elem.scrollTop = elem.scrollHeight;
 };
 
 const TOP_MARGIN: number = Math.round(
