@@ -16,6 +16,7 @@ import {
   blockDown,
   blockUp,
 } from './scrolling';
+import { deletePage } from './page';
 import { historyForward, historyBack, searchHistory } from './history';
 import {
   closeAllSidePanes,
@@ -98,6 +99,7 @@ export const setupMappings = () => {
 };
 
 export const addMappings = () => {
+  normalBind('shift+r', deletePage);
   normalBind('g o', openHrefInTheSearchWin);
 
   normalBind('g r', clickExtensionReloadButton);
