@@ -28,6 +28,7 @@ import { openAdvSearchResultInViewTab } from './view_tab';
 import {
   addArticleBlock,
   expandBlock,
+  openBlkInSidebarCollapsed,
   newNoteUnderTag,
   deleteCurrentBlock,
   expandAll,
@@ -148,6 +149,7 @@ export const addMappings = () => {
   globalBind('alt+c', addArticleBlock);
 
   normalBind('z o', expandBlock);
+  normalBind('o b', openBlkInSidebarCollapsed);
 
   normalBind('.', callPrevHints);
   globalBind('alt+s shift+u', newNoteUnderTag);

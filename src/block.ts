@@ -96,6 +96,32 @@ export const expandBlock = () => {
   );
 };
 
+export const openBlkInSidebarCollapsed = () => {
+  createHints(
+    () => [...document.querySelectorAll('.rm-block__input')] as HTMLElement[],
+    async elem => {
+      await window.roamAlphaAPI.ui.rightSidebar.addWindow({
+        window: { type: 'block', ['block-uid']: elem.id.slice(-9) },
+      });
+
+      setTimeout(() => {
+        const blk = document.querySelector('#right-sidebar .rm-block__input');
+        blk.dispatchEvent(
+          new MouseEvent('mousemove', { cancelable: true, bubbles: true }),
+        );
+        setTimeout(() => {
+          blk
+            .closest('.rm-block-main')
+            .querySelector('.rm-caret-open')
+            .dispatchEvent(
+              new PointerEvent('click', { cancelable: true, bubbles: true }),
+            );
+        });
+      });
+    },
+  );
+};
+
 export const newNoteUnderTag = () => {
   createHints(
     ([...document.querySelectorAll('.rm-page-ref')] as HTMLElement[]).reverse(),
