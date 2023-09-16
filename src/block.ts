@@ -307,3 +307,9 @@ export const newNoteUnderTagFromTextarea = async () => {
     },
   });
 };
+
+export const deleteBlk = async () => {
+  createHints(() => [...document.querySelectorAll('.rm-block__input')] as HTMLElement[], elem => {
+    window.roamAlphaAPI.deleteBlock({ block: { uid: elem.id.slice(-9) } });
+  });
+};

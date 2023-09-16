@@ -34,6 +34,7 @@ import {
   deleteCurrentBlock,
   expandAll,
   newNoteUnderTagFromTextarea,
+  deleteBlk,
 } from './block';
 import {
   focusPrevSiblingBlk,
@@ -163,6 +164,7 @@ export const addMappings = () => {
 
   normalBind('f', openRefInViewTab);
   normalBind('s', focusBlockWithHints);
+  normalBind('shift+d', deleteBlk);
   normalBind('shift+y i', copyTitle);
   normalBind('g e', expandAll);
   normalBind('e', focusTitle);
