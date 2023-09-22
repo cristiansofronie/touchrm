@@ -313,3 +313,17 @@ export const deleteBlk = async () => {
     window.roamAlphaAPI.deleteBlock({ block: { uid: elem.id.slice(-9) } });
   });
 };
+
+export const expandEmbeds = async () => {
+  const blks = document.querySelectorAll('.rm-embed-container .rm-block__input');
+
+  for (let blk of blks) {
+    const blkUid = blk.id.slice(-9);
+    window.roamAlphaAPI.updateBlock({
+      'block': {
+        'uid': blkUid,
+        'open': true
+      }
+    });
+  }
+};

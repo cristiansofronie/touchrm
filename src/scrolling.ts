@@ -1,3 +1,30 @@
+const scrollElem = document.getElementsByClassName(
+  'rm-article-wrapper',
+)[0] as HTMLElement;
+
+removeEventListener('popstate', window.restoreScroll);
+
+const restoreScrollCallback = () => {
+  if (window?.roamsr?.state?.status !== 'standby') return;
+  scrollElem.scrollTop =
+    parseInt(localStorage.getItem('roam-scroll-' + location.hash)) || 0;
+};
+
+window.restoreScroll = (event: PopStateEvent) => {
+  setTimeout(restoreScrollCallback);
+};
+
+addEventListener('popstate', window.restoreScroll);
+
+scrollElem.removeEventListener('scroll', window.storeScroll);
+window.storeScroll = () => {
+  localStorage.setItem(
+    'roam-scroll-' + location.hash,
+    String(scrollElem.scrollTop),
+  );
+};
+scrollElem.addEventListener('scroll', window.storeScroll);
+
 export const pageDown = () => {
   const scrollElem = document.querySelector(
     '.rm-article-wrapper',
@@ -65,11 +92,11 @@ export const scrollSideToBottom = () => {
 };
 
 const TOP_MARGIN: number = Math.round(
-  document.querySelector('.rm-topbar').getBoundingClientRect().height,
+  document.getElementsByClassName('rm-topbar')[0].getBoundingClientRect()
+    .height,
 );
 
-const query = '.rm-page__title';
-const getBlks = () => {
+const getBlks = (query: string) => {
   return ([...document.querySelectorAll(query)] as HTMLElement[]).sort(
     (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
   );
@@ -90,10 +117,28 @@ const elemDown = (elems: HTMLElement[], margin: number) => {
   elems[i + 1 < elems.length ? i + 1 : elems.length - 1]?.scrollIntoView(true);
 };
 
-export const blockUp = () => {
-  elemUp(getBlks(), TOP_MARGIN);
+export const mentionsDayUp = () => {
+  elemUp(getBlks('.rm-page__title'), TOP_MARGIN);
 };
 
 export const blockDown = () => {
-  elemDown(getBlks(), TOP_MARGIN);
+  elemDown(getBlks('.rm-page__title'), TOP_MARGIN);
+};
+
+export const scrollToPrevTopBlk = () => {
+  elemUp(
+    getBlks(
+      '.rm-reference-main > div > .rm-reference-container > .rm-mentions > .rm-ref-page-view > div > div > .rm-reference-item, .roam-article > div > div:nth-child(2) > .roam-block-container:not(.rm-block--ghost)',
+    ),
+    TOP_MARGIN,
+  );
+};
+
+export const scrollToNextTopBlk = () => {
+  elemDown(
+    getBlks(
+      '.rm-reference-main > div > .rm-reference-container > .rm-mentions > .rm-ref-page-view > div > div > .rm-reference-item, .roam-article > div > div:nth-child(2) > .roam-block-container:not(.rm-block--ghost)',
+    ),
+    TOP_MARGIN,
+  );
 };

@@ -13,10 +13,13 @@ export const addHistoryWatcher = () => {
 
   window.keepHistory = () => {
     setTimeout(() => {
-      const str = document
+      let str = document
         .querySelector('.roam-article .rm-title-display, .rm-block__input')
         .textContent;
 
+      if (str.length === 0) {
+        str = 'Empty, ' + location.hash.split('/').at(-1);
+      }
       window.historyList = window.historyList.filter(e => e.hash !== location.hash);
       window.historyList.push({
         hash: location.hash,

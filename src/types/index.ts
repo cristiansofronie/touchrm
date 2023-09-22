@@ -50,11 +50,15 @@ export type SrcBlk = {
 export interface AdvSearchMessageEvent extends MessageEvent {
   actionType: string;
   query: string;
-};
+}
 
 // Many things are added to the window so that on reload they would be replaced
 declare global {
   interface Window {
+    resizeObserver: ResizeObserver;
+    roamsr?: any;
+    storeScroll(): void;
+    restoreScroll(event: PopStateEvent): void;
     srcBlks: SrcBlk[];
     allPages: AllPagesEntry[];
     webSockActive: boolean;
@@ -64,11 +68,12 @@ declare global {
     roamPasteBCReceiver: BroadcastChannel;
     processPasteQueueTimeout: number;
     dailyPageManagementInterval: number;
+    commanderViewPage: boolean;
     isDailyBusy: boolean;
     isAdvSearchTab: boolean;
     isDailyNotesTab: boolean;
     focusIframe(): void;
-    Mousetrap: Mousetrap;
+    Mousetrap: Mousetrap & { _resetSequences?(): void };
     hintsCount: number;
     ws: WebSocket;
     browserSyncBC: BroadcastChannel;
@@ -77,10 +82,14 @@ declare global {
     roamPasteBC: BroadcastChannel;
     advSearchBC: BroadcastChannel;
     advSearchBCReceiver: BroadcastChannel;
+    browserSyncBCReceiver: BroadcastChannel;
     keepHistory(): void;
     historyList: HistoryEntry[];
     messageListener(event: MessageEvent): void;
-    appendSrcCacheWatchFn: (before: PullBlock | null, after: PullBlock | null) => void;
+    appendSrcCacheWatchFn: (
+      before: PullBlock | null,
+      after: PullBlock | null,
+    ) => void;
     prevMsg: string;
   }
 }

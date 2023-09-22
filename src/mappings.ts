@@ -14,7 +14,9 @@ import {
   sidePageDown,
   sidePageUp,
   blockDown,
-  blockUp,
+  mentionsDayUp,
+  scrollToNextTopBlk,
+  scrollToPrevTopBlk,
 } from './scrolling';
 import { deletePage } from './page';
 import { historyForward, historyBack, searchHistory } from './history';
@@ -35,6 +37,7 @@ import {
   expandAll,
   newNoteUnderTagFromTextarea,
   deleteBlk,
+  expandEmbeds,
 } from './block';
 import {
   focusPrevSiblingBlk,
@@ -54,6 +57,7 @@ import { browserSearch, openHrefInTheSearchWin } from './browser_extension';
 import { copyCodeBlock, enterCodeMirror } from './code_block';
 import { newTimeBlock, nestBlocksUnderPreviousTime } from './daily';
 import { reloadAdvSearch } from './adv_search';
+import { toggleLinkedRefs } from './references';
 
 const normalBind = (keys: string, callback: CustomCallbackFunction) => {
   const _bindKey = (keys: string, callback: CustomCallbackFunction) => {
@@ -70,6 +74,7 @@ const normalBind = (keys: string, callback: CustomCallbackFunction) => {
           return;
 
         callback(event, combo);
+        window.Mousetrap._resetSequences();
         return false;
       },
       'keydown',
@@ -101,6 +106,8 @@ export const setupMappings = () => {
 
 export const addMappings = () => {
   normalBind('shift+r', deletePage);
+  globalBind('alt+4', toggleLinkedRefs);
+
   normalBind('g o', openHrefInTheSearchWin);
 
   normalBind('g r', clickExtensionReloadButton);
@@ -125,9 +132,10 @@ export const addMappings = () => {
   normalBind('u', pageUp);
   normalBind('j', scrollDown);
   normalBind('k', scrollUp);
-  normalBind('shift+f4', blockUp);
+  normalBind('shift+f4', mentionsDayUp);
   normalBind('f4', blockDown);
-
+  normalBind('t', scrollToNextTopBlk);
+  normalBind('shift+t', scrollToPrevTopBlk);
 
   globalBind('alt+j', scrollDown);
   globalBind('alt+k', scrollUp);
@@ -150,6 +158,7 @@ export const addMappings = () => {
   globalBind('alt+o', openAdvSearchResultInViewTab);
 
   globalBind('alt+c', addArticleBlock);
+  globalBind('alt+[', expandEmbeds);
 
   normalBind('z o', expandBlock);
   normalBind('o b', openBlkInSidebarCollapsed);
