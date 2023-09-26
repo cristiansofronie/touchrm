@@ -113,9 +113,15 @@ export const openBlkInSidebarCollapsed = () => {
           blk
             .closest('.rm-block-main')
             .querySelector('.rm-caret-open')
-            .dispatchEvent(
+            ?.dispatchEvent(
               new PointerEvent('click', { cancelable: true, bubbles: true }),
             );
+          window.roamAlphaAPI.ui.setBlockFocusAndSelection({
+            location: {
+              'window-id': blk.id.slice(12, -10),
+              'block-uid': blk.id.slice(-9),
+            },
+          });
         });
       });
     },
@@ -309,21 +315,26 @@ export const newNoteUnderTagFromTextarea = async () => {
 };
 
 export const deleteBlk = async () => {
-  createHints(() => [...document.querySelectorAll('.rm-block__input')] as HTMLElement[], elem => {
-    window.roamAlphaAPI.deleteBlock({ block: { uid: elem.id.slice(-9) } });
-  });
+  createHints(
+    () => [...document.querySelectorAll('.rm-block__input')] as HTMLElement[],
+    elem => {
+      window.roamAlphaAPI.deleteBlock({ block: { uid: elem.id.slice(-9) } });
+    },
+  );
 };
 
 export const expandEmbeds = async () => {
-  const blks = document.querySelectorAll('.rm-embed-container .rm-block__input');
+  const blks = document.querySelectorAll(
+    '.rm-embed-container .rm-block__input',
+  );
 
   for (let blk of blks) {
     const blkUid = blk.id.slice(-9);
     window.roamAlphaAPI.updateBlock({
-      'block': {
-        'uid': blkUid,
-        'open': true
-      }
+      block: {
+        uid: blkUid,
+        open: true,
+      },
     });
   }
 };
