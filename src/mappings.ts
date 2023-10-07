@@ -38,6 +38,7 @@ import {
   newNoteUnderTagFromTextarea,
   deleteBlk,
   expandEmbeds,
+  newBlockUnder,
 } from './block';
 import {
   focusPrevSiblingBlk,
@@ -159,6 +160,7 @@ export const addMappings = () => {
 
   globalBind('alt+c', addArticleBlock);
   globalBind('alt+[', expandEmbeds);
+  globalBind('alt+s u', newBlockUnder);
 
   normalBind('z o', expandBlock);
   normalBind('o b', openBlkInSidebarCollapsed);

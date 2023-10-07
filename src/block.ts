@@ -338,3 +338,25 @@ export const expandEmbeds = async () => {
     });
   }
 };
+
+export const newBlockUnder = async () => {
+  const uid = window.roamAlphaAPI.ui.getFocusedBlock()['block-uid'];
+  const newUid = window.roamAlphaAPI.util.generateUID();
+  await window.roamAlphaAPI.createBlock({
+    location: {
+      'parent-uid': uid,
+      order: 0,
+    },
+    block: {
+      string: '',
+      uid: newUid,
+    },
+  });
+  await window.roamAlphaAPI.ui.setBlockFocusAndSelection({
+    location: {
+      'window-id': 'main-window',
+      'block-uid': newUid,
+    },
+    selection: { start: 0 },
+  });
+};
