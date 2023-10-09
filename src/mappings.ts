@@ -58,7 +58,7 @@ import { browserSearch, openHrefInTheSearchWin } from './browser_extension';
 import { copyCodeBlock, enterCodeMirror } from './code_block';
 import { newTimeBlock, nestBlocksUnderPreviousTime } from './daily';
 import { reloadAdvSearch } from './adv_search';
-import { toggleLinkedRefs } from './references';
+import { toggleLinkedRefs, quickMakeRef } from './references';
 
 const normalBind = (keys: string, callback: CustomCallbackFunction) => {
   const _bindKey = (keys: string, callback: CustomCallbackFunction) => {
@@ -108,6 +108,7 @@ export const setupMappings = () => {
 export const addMappings = () => {
   normalBind('shift+r', deletePage);
   globalBind('alt+4', toggleLinkedRefs);
+  globalBind('alt+]', quickMakeRef);
 
   normalBind('g o', openHrefInTheSearchWin);
 
