@@ -360,3 +360,32 @@ export const newBlockUnder = async () => {
     selection: { start: 0 },
   });
 };
+
+export const quickMakeRefAndNewBlockUnder = async () => {
+  const txtArea = document.activeElement as HTMLTextAreaElement;
+  if (txtArea.tagName !== 'TEXTAREA') return;
+  const line = txtArea.value.slice(0, txtArea.selectionEnd).split('\n').at(-1);
+
+  txtArea.setRangeText('[[' + line + ']]', txtArea.selectionEnd - line.length, txtArea.selectionEnd, 'end');
+  txtArea.dispatchEvent(new InputEvent('change', { bubbles: true }));
+
+  const uid = window.roamAlphaAPI.ui.getFocusedBlock()['block-uid'];
+  const newUid = window.roamAlphaAPI.util.generateUID();
+  await window.roamAlphaAPI.createBlock({
+    location: {
+      'parent-uid': uid,
+      order: 0,
+    },
+    block: {
+      string: '',
+      uid: newUid,
+    },
+  });
+  await window.roamAlphaAPI.ui.setBlockFocusAndSelection({
+    location: {
+      'window-id': 'main-window',
+      'block-uid': newUid,
+    },
+    selection: { start: 0 },
+  });
+};

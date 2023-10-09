@@ -39,6 +39,7 @@ import {
   deleteBlk,
   expandEmbeds,
   newBlockUnder,
+  quickMakeRefAndNewBlockUnder,
 } from './block';
 import {
   focusPrevSiblingBlk,
@@ -108,7 +109,7 @@ export const setupMappings = () => {
 export const addMappings = () => {
   normalBind('shift+r', deletePage);
   globalBind('alt+4', toggleLinkedRefs);
-  globalBind('alt+]', quickMakeRef);
+  globalBind('alt+shift+]', quickMakeRef);
 
   normalBind('g o', openHrefInTheSearchWin);
 
@@ -162,6 +163,7 @@ export const addMappings = () => {
   globalBind('alt+c', addArticleBlock);
   globalBind('alt+[', expandEmbeds);
   globalBind('alt+s u', newBlockUnder);
+  globalBind('alt+]', quickMakeRefAndNewBlockUnder);
 
   normalBind('z o', expandBlock);
   normalBind('o b', openBlkInSidebarCollapsed);
