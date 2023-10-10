@@ -40,6 +40,7 @@ import {
   expandEmbeds,
   newBlockUnder,
   quickMakeRefAndNewBlockUnder,
+  copyBlock,
 } from './block';
 import {
   focusPrevSiblingBlk,
@@ -164,6 +165,7 @@ export const addMappings = () => {
   globalBind('alt+[', expandEmbeds);
   globalBind('alt+s u', newBlockUnder);
   globalBind('alt+]', quickMakeRefAndNewBlockUnder);
+  normalBind('y b', copyBlock);
 
   normalBind('z o', expandBlock);
   normalBind('o b', openBlkInSidebarCollapsed);

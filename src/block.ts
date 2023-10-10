@@ -389,3 +389,20 @@ export const quickMakeRefAndNewBlockUnder = async () => {
     selection: { start: 0 },
   });
 };
+
+export const copyBlock = () => {
+  createHints('.rm-block__input', elem => {
+    const str = window.roamAlphaAPI.q(
+      `[
+        :find ?str .
+        :in $ ?uid
+        :where
+          [?blk :block/uid ?uid]
+          [?blk :block/string ?str]
+      ]`,
+      elem.id.slice(-9),
+    ) as unknown as string;
+
+    navigator.clipboard.writeText(str);
+  });
+};
