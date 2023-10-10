@@ -406,3 +406,38 @@ export const copyBlock = () => {
     navigator.clipboard.writeText(str);
   });
 };
+
+export const newBlockAfter = async () => {
+  const uid = window.roamAlphaAPI.ui.getFocusedBlock()['block-uid'];
+  const newUid = window.roamAlphaAPI.util.generateUID();
+  const [pUid, order] = window.roamAlphaAPI.data.q(
+    `[
+    :find ?parentUid ?order
+    :in $ ?uid
+    :where
+      [?blk :block/uid ?uid]
+      [?parent :block/children ?blk]
+      [?parent :block/uid ?parentUid]
+      [?blk :block/order ?order]
+  ]`,
+    uid,
+  )[0] as unknown as [string, number];
+
+  await window.roamAlphaAPI.createBlock({
+    location: {
+      'parent-uid': pUid,
+      order: order + 1,
+    },
+    block: {
+      string: '',
+      uid: newUid,
+    },
+  });
+
+  window.roamAlphaAPI.ui.setBlockFocusAndSelection({
+    location: {
+      'window-id': 'main-window',
+      'block-uid': newUid,
+    },
+  });
+};
