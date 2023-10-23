@@ -5,9 +5,12 @@ const scrollElem = document.getElementsByClassName(
 removeEventListener('popstate', window.restoreScroll);
 
 const restoreScrollCallback = () => {
+  // Special case that should not be here
   if (window?.roamsr?.state?.status !== 'standby') return;
-  scrollElem.scrollTop =
-    parseInt(localStorage.getItem('roam-scroll-' + location.hash)) || 0;
+
+  const storedScrollback = parseInt(localStorage.getItem('roam-scroll-' + location.hash)) || 0;
+  scrollElem.scrollTop = storedScrollback;
+  console.log('Restoring scroll to', storedScrollback);
 };
 
 window.restoreScroll = (event: PopStateEvent) => {
