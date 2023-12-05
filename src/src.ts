@@ -94,8 +94,8 @@ export const reloadSrcBlkCache = () => {
       let parsed;
       try {
         parsed = JSON.parse(e[1]);
-      } catch (e) {
-        console.error('Failed the parse:', e);
+      } catch (error) {
+        console.error('Failed to parse:', e);
       }
 
       parsed.feature = e[0].replace(/ Src$/, '');
