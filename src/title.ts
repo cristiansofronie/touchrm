@@ -7,6 +7,13 @@ export const copyTitle = () => {
   return false;
 };
 
+export const copyTitleLink = () => {
+  navigator.clipboard.writeText(
+    '[[' + document.getElementsByClassName('rm-title-display')[0].textContent + ']]',
+  );
+  return false;
+};
+
 export const focusTitle = () => {
   const tick = document.querySelector('.bp3-button-group [icon="tick"]');
   if (tick) {

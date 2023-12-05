@@ -56,7 +56,7 @@ import { callPrevHints } from './hints';
 import { quickSearchWithClip } from './search';
 import { reloadExtension, clickExtensionReloadButton } from './extension';
 import { openRefInViewTab } from './view_tab';
-import { copyTitle, focusTitle } from './title';
+import { copyTitleLink, copyTitle, focusTitle } from './title';
 import { browserSearch, openHrefInTheSearchWin } from './browser_extension';
 import { copyCodeBlock, enterCodeMirror } from './code_block';
 import { newTimeBlock, nestBlocksUnderPreviousTime } from './daily';
@@ -184,6 +184,7 @@ export const addMappings = () => {
   normalBind('s', focusBlockWithHints);
   normalBind('shift+d', deleteBlk);
   normalBind('shift+y i', copyTitle);
+  normalBind('shift+y shift+i', copyTitleLink);
   normalBind('g e', expandAll);
   normalBind('e', focusTitle);
   globalBind('alt+v', browserSearch);
