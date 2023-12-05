@@ -2,77 +2,25 @@ import { createHints } from './hints';
 import { UIGuard } from './utils';
 
 export const addArticleBlock = async () => {
-  const pUID = location.hash.split('/').pop();
-  let lstBlkStr;
-  let lstBlk;
+  const blkUid = window.roamAlphaAPI.util.generateUID();
 
-  let blks = [
-    ...document.querySelectorAll(`.roam-article :where(
-    .roam-article > div:first-child > div:last-child,
-    .rm-level-0,
-    .rm-reference-item > div
-  ) > .roam-block-container > .rm-block-main .rm-block__input`),
-  ] as HTMLElement[];
-
-  lstBlk = blks
-    .filter(
-      e =>
-        !e
-          .closest('.roam-block-container')
-          .querySelector(':scope > .rm-block-children .roam-block-container') &&
-        !e.closest('.rm-block-main').querySelector('.rm-bullet--closed'),
-    )
-    .find(
-      e =>
-        (e.tagName === 'TEXTAREA' && (e as HTMLTextAreaElement).value === '') ||
-        (e.tagName !== 'TEXTAREA' && e.innerText === ''),
-    );
-
-  if (!lstBlk) {
-    lstBlkStr = '';
-  }
-
-  let lstBlkUID;
-
-  if (lstBlk) {
-    if (lstBlk.tagName === 'TEXTAREA')
-      lstBlkStr = (lstBlk as HTMLTextAreaElement).value;
-    else {
-      lstBlkStr = lstBlk.innerHTML;
-      if (lstBlk.innerHTML === '<span></span>') lstBlkStr = '';
-      if (lstBlk.innerText) lstBlkStr = lstBlk.innerText;
-    }
-
-    lstBlkUID = lstBlk.id.slice(-9);
-    lstBlk.scrollIntoView(true);
-  } else {
-    // Hack
-    lstBlkStr = ' ';
-  }
-
-  const blkUID = lstBlkStr ? window.roamAlphaAPI.util.generateUID() : lstBlkUID;
-
-  if (lstBlkStr) {
-    await window.roamAlphaAPI.createBlock({
-      location: {
-        'parent-uid': pUID,
-        order: 'last',
-      },
-      block: {
-        string: '',
-        uid: blkUID,
-      },
-    });
-  }
-
-  await window.roamAlphaAPI.ui.setBlockFocusAndSelection({
+  await window.roamAlphaAPI.createBlock({
     location: {
-      'window-id': 'main-window',
-      'block-uid': blkUID,
+      'parent-uid': location.hash.split('/').at(-1),
+      order: 'last',
+    },
+    block: {
+      string: '',
+      uid: blkUid,
     },
   });
 
-  document.activeElement.scrollIntoView(true);
+  window.roamAlphaAPI.ui.setBlockFocusAndSelection({
+    location: {
+      'window-id': 'main-window',
+      'block-uid': blkUid,
+    },
+  });
 };
 
 export const expandBlock = () => {
