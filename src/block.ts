@@ -336,7 +336,12 @@ export const quickMakeRefAndNewBlockUnder = async () => {
   if (txtArea.tagName !== 'TEXTAREA') return;
   const line = txtArea.value.slice(0, txtArea.selectionEnd).split('\n').at(-1);
 
-  txtArea.setRangeText('[[' + line + ']]', txtArea.selectionEnd - line.length, txtArea.selectionEnd, 'end');
+  txtArea.setRangeText(
+    '[[' + line + ']]',
+    txtArea.selectionEnd - line.length,
+    txtArea.selectionEnd,
+    'end',
+  );
   txtArea.dispatchEvent(new InputEvent('change', { bubbles: true }));
 
   const uid = window.roamAlphaAPI.ui.getFocusedBlock()['block-uid'];
