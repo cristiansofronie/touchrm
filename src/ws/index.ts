@@ -3,12 +3,41 @@ import { handleSendBlockToRoam } from './handlers';
 const PORT = 8181;
 window.ws;
 
+const reloadOpenSearchCache = () => {
+  window.allPages = window.roamAlphaAPI.q(
+    '[:find ?t ?uid :where [?n :node/title ?t][?n :block/uid ?uid]]',
+  ) as unknown as [string, string][];
+};
+
+const reloadPageCache = () => {
+  const pages = window.roamAlphaAPI.q(
+    '[:find ?t ?uid :where [?n :node/title ?t][?n :block/uid ?uid]]',
+  ) as unknown as [string, string][];
+  window.allPages = pages;
+
+  window.ws.send(
+    JSON.stringify({
+      actionType: 'reloadPageCache',
+      data: {
+        pages: pages.map(e => e[0]),
+      },
+    }),
+  );
+};
+
+window.roamAlphaAPI.ui.commandPalette.addCommand({
+  label: 'Reload page cache',
+  callback: reloadPageCache,
+});
+
 export const handleMessage = async (e: MessageEvent) => {
   window.webSockActive = true;
   const res = JSON.parse(e.data);
 
   if (res.actionType === 'sendBlockToRoam') {
     handleSendBlockToRoam({ page: res.page, blocks: res.blocks });
+  } else if (res.actionType === 'reloadPageCache') {
+    reloadPageCache();
   } else if (res.actionType === 'reloadSrcCache') {
     window.reloadSrcCacheBC.postMessage('reload');
   } else if (res.actionType === 'reloadAdvSearch') {
@@ -114,47 +143,49 @@ export const handleMessage = async (e: MessageEvent) => {
   } else if (res.actionType === 'openSearchRoam') {
     let justHistory = false;
 
-    const cmdArray = res.pattern.split(' ');
-    const flags = cmdArray.filter((e: string) => e[0] === ';');
-    const patternArray = cmdArray.filter((e: string) => e[0] !== ';');
+    // const cmdArray = res.pattern.split(' ');
+    // const flags = cmdArray.filter((e: string) => e[0] === ';');
+    // const patternArray = cmdArray.filter((e: string) => e[0] !== ';');
 
-    if (flags.some((e: string) => e === ';s')) {
-      patternArray.splice(1, 0, '(snippet|script)');
-      justHistory = true;
-    }
-    const pattern = patternArray.join('.*');
+    // if (flags.some((e: string) => e === ';s')) {
+    //   patternArray.splice(1, 0, '(snippet|script)');
+    //   justHistory = true;
+    // }
+
+    // const pattern = patternArray.join('.*');
+    // const pattern = patternArray.join('.*');
 
     const openSearchRoamOpen = () => {
-      if (flags.some((e: string) => e === ';s')) {
-        let codeBlks = (
-          window.roamAlphaAPI.q(
-            `[
-            :find ?str
-            :in $ ?uid
-            :where
-              [?node :block/uid ?uid]
-              [?blk_with_ref :block/refs ?node]
-              [?blk_with_ref :block/children ?child]
-              [?child :block/string ?str]
-          ]`,
-            pages[0][1],
-          ) as unknown as [string][]
-        ).map(blk => {
-          return blk[0]
-            .replace(new RegExp('^' + '`'.repeat(3) + 'javascript\n'), '')
-            .replace(new RegExp('`'.repeat(3) + '$'), '')
-            .trim();
-        });
+      // if (flags.some((e: string) => e === ';s')) {
+      //   let codeBlks = (
+      //     window.roamAlphaAPI.q(
+      //       `[
+      //       :find ?str
+      //       :in $ ?uid
+      //       :where
+      //         [?node :block/uid ?uid]
+      //         [?blk_with_ref :block/refs ?node]
+      //         [?blk_with_ref :block/children ?child]
+      //         [?child :block/string ?str]
+      //     ]`,
+      //       pages[0][1],
+      //     ) as unknown as [string][]
+      //   ).map(blk => {
+      //     return blk[0]
+      //       .replace(new RegExp('^' + '`'.repeat(3) + 'javascript\n'), '')
+      //       .replace(new RegExp('`'.repeat(3) + '$'), '')
+      //       .trim();
+      //   });
 
-        window.ws.send(
-          JSON.stringify({
-            actionType: 'copy',
-            data: {
-              text: codeBlks[0],
-            },
-          }),
-        );
-      }
+      //   window.ws.send(
+      //     JSON.stringify({
+      //       actionType: 'copy',
+      //       data: {
+      //         text: codeBlks[0],
+      //       },
+      //     }),
+      //   );
+      // }
 
       if (pages[0][0].startsWith('roam/session/')) {
         window.sessionTabBC.postMessage({ UID: pages[0][1] });
@@ -168,19 +199,20 @@ export const handleMessage = async (e: MessageEvent) => {
     };
 
     let pages = window.allPages
-      .filter(e => new RegExp(pattern, 'i').test(e[0]))
+      // .filter(e => new RegExp(pattern).test(e[0]))
+      .filter(e => res.pattern === e[0])
       .sort((a, b) => a[0].length - b[0].length);
 
     if (pages.length) {
       openSearchRoamOpen();
+      return;
     } else {
-      window.allPages = window.roamAlphaAPI.q(
-        '[:find ?t ?uid :where [?n :node/title ?t][?n :block/uid ?uid]]',
-      ) as unknown as [string, string][];
+      reloadOpenSearchCache();
     }
 
     pages = window.allPages
-      .filter(e => new RegExp(res.pattern, 'i').test(e[0]))
+      .filter(e => res.pattern === e[0])
+      // .filter(e => new RegExp(res.pattern).test(e[0]))
       .sort((a, b) => a[0].length - b[0].length);
 
     if (pages.length) {
