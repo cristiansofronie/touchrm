@@ -25,20 +25,42 @@ export const addArticleBlock = async () => {
 
 export const expandBlock = () => {
   createHints(
-    () => [...document.querySelectorAll('.rm-block__input')] as HTMLElement[],
+    () => [...document.querySelectorAll('.rm-bullet')] as HTMLElement[],
     elem => {
       return new Promise<void>(resolve => {
-        elem.dispatchEvent(new MouseEvent('mousemove', { bubbles: true }));
+        const style = document.createElement('style');
+        style.textContent = `
+.bp3-context-menu + .bp3-portal {
+  visibility: hidden;
+}
+`;
+        document.head.append(style);
 
         setTimeout(() => {
-          const caret = elem.closest('.rm-block-main');
-          caret
-            .querySelector('.rm-caret')
-            .dispatchEvent(new PointerEvent('click', { bubbles: true }));
+          const coords = elem.getBoundingClientRect();
+          elem.dispatchEvent(
+            new MouseEvent('contextmenu', {
+              cancelable: true,
+              bubbles: true,
+              clientX: coords.x,
+              clientY: coords.y,
+            }),
+          );
+
           setTimeout(() => {
-            resolve();
-          }, 200);
-        });
+            const expandAllElem = ([
+              ...document.querySelectorAll(
+                '.bp3-context-menu + .bp3-portal li a',
+              ),
+            ] as HTMLElement[]).find(e => e.textContent == 'Expand all');
+            console.log(expandAllElem);
+            expandAllElem.click();
+
+            setTimeout(() => {
+              style.remove();
+            });
+          });
+        }, 10);
       });
     },
   );
